@@ -5,7 +5,7 @@ kaboom({
     debug: true,
     clearColor: [0, 0, 0, 1],
 })
-
+    //movement variables for player
     const MOVE_SPEED = 120;
     const JUMP_FORCE = 360;
     const BIG_JUMP_FORCE = 550;
@@ -81,6 +81,7 @@ scene("game", ({ level, score }) =>{
 
     const gameLevel = addLevel(maps[level],levelConfig)
 
+    //adding a score label/ui element
     const scoreLabel = add([
         text(score),
         pos(30,6),
@@ -122,6 +123,7 @@ scene("game", ({ level, score }) =>{
         }
     }
 
+    //player
     const player = add([ 
         sprite('mario'), solid(), 
         pos(30,0), 
@@ -134,6 +136,7 @@ scene("game", ({ level, score }) =>{
         m.move(100,0)
     })
 
+    //object interactions
     player.on("headbump", (obj) => {
         if(obj.is('coin-block')) {
             gameLevel.spawn('$', obj.gridPos.sub(0,1))
@@ -159,6 +162,7 @@ scene("game", ({ level, score }) =>{
         scoreLabel.text = scoreLabel.value
     })
 
+    //adding in enemy interaction
     player.collides('dangerous', (d) => {
         if(isJumping) {
             destroy(d)
@@ -174,7 +178,7 @@ scene("game", ({ level, score }) =>{
     })
 
     player.action(() =>{
-        camPos(player.pos)
+        camPos(player.pos) //camera postition
         if(player.pos.y >= FALL_DEATH){
             go('lose', {score: scoreLabel.value})
         }
@@ -189,6 +193,7 @@ scene("game", ({ level, score }) =>{
         })
     })
 
+    //adding keyboard functions
     keyDown('left', () => {
         player.move(-MOVE_SPEED,0);
     })
@@ -212,6 +217,7 @@ scene("game", ({ level, score }) =>{
 
 })
 
+//making a game over screen
 scene('lose', ({ score }) =>{
     add([text(score, 32), origin('center'), pos(width()/2, height()/2)])
 })
